@@ -2,7 +2,7 @@
 
 namespace EZLogger.File
 {
-    public class FileWriter : IFileWriter
+    public class FileWriter : IWriter
     {
         private readonly object lockObj;
         
@@ -14,11 +14,11 @@ namespace EZLogger.File
             lockObj = new object();
         }
 
-        public void Write(string content)
+        public void WriteMessage(string content)
         {
             lock(lockObj)
             {
-                System.IO.File.AppendAllText(FileName, content);
+                System.IO.File.AppendAllText(FileName, content + Environment.NewLine + Environment.NewLine);
             }
         }
     }

@@ -1,27 +1,31 @@
-using EZLogger;
-using EZLogger.File;
-using Moq;
+﻿using Moq;
 using System;
 using System.Collections.Generic;
 using Xunit;
 
 namespace EZLogger.Test
 {
-    public class FileLoggerTest
+    public class LoggerTest
     {
+        private readonly Formatter _Formatter;    
+
+        public LoggerTest()
+        {
+            _Formatter = new Formatter();
+        }
 
         [Fact]
         public void LogString()
         {
             List<string> writtenMessages = new List<string>();
 
-            var mockObj = new Mock<IFileWriter>();
-            mockObj.Setup(x => x.Write(It.IsAny<string>()))
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<string>()))
                 .Callback((string content) => writtenMessages.Add(content));
 
             string message = "test message";
 
-            ILogger logger = new FileLogger(mockObj.Object);
+            ILogger logger = new Logger(_Formatter, mockObj.Object);
             logger.LogMessage(message);
 
             Assert.Collection(writtenMessages, item => Assert.Contains(message, item));
@@ -34,14 +38,14 @@ namespace EZLogger.Test
         {
             List<string> writtenMessages = new List<string>();
 
-            var mockObj = new Mock<IFileWriter>();
-            mockObj.Setup(x => x.Write(It.IsAny<string>()))
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<string>()))
                 .Callback((string content) => writtenMessages.Add(content));
 
             string message = "test message";
             LogLevel level = LogLevel.Debug;
 
-            ILogger logger = new FileLogger(mockObj.Object);
+            ILogger logger = new Logger(_Formatter, mockObj.Object);
             logger.LogMessage(message, level);
 
             Assert.Collection(writtenMessages, item => Assert.Contains(message, item));
@@ -54,13 +58,13 @@ namespace EZLogger.Test
         {
             List<string> writtenMessages = new List<string>();
 
-            var mockObj = new Mock<IFileWriter>();
-            mockObj.Setup(x => x.Write(It.IsAny<string>()))
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<string>()))
                 .Callback((string content) => writtenMessages.Add(content));
 
             Exception ex = GetValidException("test exception");
 
-            ILogger logger = new FileLogger(mockObj.Object);
+            ILogger logger = new Logger(_Formatter, mockObj.Object);
             logger.LogMessage(ex);
 
             Assert.Collection(writtenMessages, item => Assert.Contains(ex.Message, item));
@@ -74,15 +78,15 @@ namespace EZLogger.Test
         {
             List<string> writtenMessages = new List<string>();
 
-            var mockObj = new Mock<IFileWriter>();
-            mockObj.Setup(x => x.Write(It.IsAny<string>()))
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<string>()))
                 .Callback((string content) => writtenMessages.Add(content));
 
             Exception ex = GetValidException("test exception");
 
             LogLevel level = LogLevel.Warning;
 
-            ILogger logger = new FileLogger(mockObj.Object);
+            ILogger logger = new Logger(_Formatter, mockObj.Object);
             logger.LogMessage(ex, level);
 
             Assert.Collection(writtenMessages, item => Assert.Contains(ex.Message, item));
@@ -98,13 +102,13 @@ namespace EZLogger.Test
         {
             List<string> writtenMessages = new List<string>();
 
-            var mockObj = new Mock<IFileWriter>();
-            mockObj.Setup(x => x.Write(It.IsAny<string>()))
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<string>()))
                 .Callback((string content) => writtenMessages.Add(content));
 
             string message = null;
 
-            ILogger logger = new FileLogger(mockObj.Object);
+            ILogger logger = new Logger(_Formatter, mockObj.Object);
             logger.LogMessage(message);
 
             Assert.Collection(writtenMessages, item => Assert.Contains(Enum.GetName(typeof(LogLevel), LogLevel.Info), item));
@@ -115,14 +119,14 @@ namespace EZLogger.Test
         {
             List<string> writtenMessages = new List<string>();
 
-            var mockObj = new Mock<IFileWriter>();
-            mockObj.Setup(x => x.Write(It.IsAny<string>()))
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<string>()))
                 .Callback((string content) => writtenMessages.Add(content));
 
             Exception innerEx = GetValidException("test inner exception");
             Exception ex = GetValidException("test exception", innerEx);
-            
-            ILogger logger = new FileLogger(mockObj.Object);
+
+            ILogger logger = new Logger(_Formatter, mockObj.Object);
             logger.LogMessage(ex);
 
             Assert.Collection(writtenMessages, item => Assert.Contains(ex.Message, item));
@@ -141,13 +145,13 @@ namespace EZLogger.Test
         {
             List<string> writtenMessages = new List<string>();
 
-            var mockObj = new Mock<IFileWriter>();
-            mockObj.Setup(x => x.Write(It.IsAny<string>()))
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<string>()))
                 .Callback((string content) => writtenMessages.Add(content));
 
             string message = "test message";
 
-            ILogger logger = new FileLogger(mockObj.Object);
+            ILogger logger = new Logger(_Formatter, mockObj.Object);
             logger.LogMessage(message, level);
 
             Assert.Collection(writtenMessages, item => Assert.Contains(Enum.GetName(typeof(LogLevel), level), item));
@@ -162,13 +166,13 @@ namespace EZLogger.Test
         {
             List<string> writtenMessages = new List<string>();
 
-            var mockObj = new Mock<IFileWriter>();
-            mockObj.Setup(x => x.Write(It.IsAny<string>()))
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<string>()))
                 .Callback((string content) => writtenMessages.Add(content));
 
             Exception ex = GetValidException("test message");
 
-            ILogger logger = new FileLogger(mockObj.Object);
+            ILogger logger = new Logger(_Formatter, mockObj.Object);
             logger.LogMessage(ex, level);
 
             Assert.Collection(writtenMessages, item => Assert.Contains(Enum.GetName(typeof(LogLevel), level), item));
@@ -180,11 +184,11 @@ namespace EZLogger.Test
             int messageCount = 100;
             List<string> writtenMessages = new List<string>();
 
-            var mockObj = new Mock<IFileWriter>();
-            mockObj.Setup(x => x.Write(It.IsAny<string>()))
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<string>()))
                 .Callback((string content) => writtenMessages.Add(content));
 
-            ILogger logger = new FileLogger(mockObj.Object);
+            ILogger logger = new Logger(_Formatter, mockObj.Object);
 
             for (int i = 0; i < 100; i++)
             {
@@ -200,15 +204,15 @@ namespace EZLogger.Test
             int messageCount = 100;
             List<string> writtenMessages = new List<string>();
 
-            var mockObj = new Mock<IFileWriter>();
-            mockObj.Setup(x => x.Write(It.IsAny<string>()))
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<string>()))
                 .Callback((string content) => writtenMessages.Add(content));
 
             Exception ex;
 
-            ILogger logger = new FileLogger(mockObj.Object);
-            
-            for(int i = 0; i < 100; i++)
+            ILogger logger = new Logger(_Formatter, mockObj.Object);
+
+            for (int i = 0; i < 100; i++)
             {
                 ex = GetValidException("test message " + i);
                 logger.LogMessage(ex);
@@ -223,7 +227,7 @@ namespace EZLogger.Test
             {
                 throw new Exception(message, innerException);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return ex;
             }

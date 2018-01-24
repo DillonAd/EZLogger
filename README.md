@@ -11,8 +11,10 @@ Once that is created, it can be passed to the `FileLogger` and then setup is don
 
 ``` cpp
 
-IFileWriter fileWriter = new FileWriter("Log.log");
-IFileLogger fileLogger = new FileLogger(fileWriter);
+IWriter fileWriter = new FileWriter("Log.log");
+IFormatter formatter = new Formatter();
+ILogger fileLogger = new Logger(formatter, fileWriter);
 
 `
+
 Happy Logging!
