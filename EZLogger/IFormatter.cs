@@ -4,9 +4,9 @@ using System.Text;
 
 namespace EZLogger
 {
-    public interface IFormatter
+    public interface IFormatter<T>
     {
         string GetExceptionDetails(Exception ex);
-        string FormatMessage(LogLevel logLevel, string message);
+        T FormatMessage(LogMessage message);
     }
 }

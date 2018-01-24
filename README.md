@@ -11,9 +11,9 @@ Once that is created, it can be passed to the `FileLogger` and then setup is don
 
 ``` cpp
 
-IWriter fileWriter = new FileWriter("Log.log");
-IFormatter formatter = new Formatter();
-ILogger fileLogger = new Logger(formatter, fileWriter);
+IFormatter formatter = new FileMessageFormatter();
+IWriter fileWriter = new FileWriter(formatter, "Log.log");
+ILogger fileLogger = new Logger(fileWriter);
 
 `
 

@@ -4,21 +4,25 @@ namespace EZLogger.File
 {
     public class FileWriter : IWriter
     {
-        private readonly object lockObj;
+        private readonly IFormatter<string> _Formatter;
+        private readonly object _LockObj;
         
         public string FileName { get; private set; }
 
-        public FileWriter(string fileName)
+        public FileWriter(IFormatter<string> formatter, string fileName)
         {
+            _Formatter = formatter;
+            _LockObj = new object();
+
             FileName = fileName;
-            lockObj = new object();
         }
 
-        public void WriteMessage(string content)
+        public void WriteMessage(LogMessage message)
         {
-            lock(lockObj)
+            string content = _Formatter.FormatMessage(message);
+            lock(_LockObj)
             {
-                System.IO.File.AppendAllText(FileName, content + Environment.NewLine + Environment.NewLine);
+                System.IO.File.AppendAllText(FileName, content);
             }
         }
     }

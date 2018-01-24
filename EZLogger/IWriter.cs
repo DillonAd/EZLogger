@@ -6,6 +6,6 @@ namespace EZLogger
 {
     public interface IWriter
     {
-        void WriteMessage(string content);
+        void WriteMessage(LogMessage message);
     }
 }
