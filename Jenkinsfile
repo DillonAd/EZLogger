@@ -20,7 +20,7 @@ pipeline {
         stage('Test') {
             steps {
                 unstash stashName
-                sh 'dotnet test'
+                sh 'dotnet test EZLogger.Test/EZLogger.Test.csproj'
                 stash stashName
             }
         }
