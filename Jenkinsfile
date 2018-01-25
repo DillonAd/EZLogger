@@ -12,8 +12,8 @@ pipeline {
                 checkout scm
                 sh 'dotnet restore'
                 sh 'dotnet build'
-                sh 'dotnet pack --no-build --no-restore ../'
-                sh 'dotnet push --no-restore --version-suffix ' + env.BUILD_NUMBER
+                sh 'dotnet pack --no-build --no-restore'
+                //sh 'dotnet push --no-restore --version-suffix ' + env.BUILD_NUMBER
                 stash stashName
             }
         }
@@ -33,7 +33,7 @@ pipeline {
             steps {
                 unstash stashName
                 sh 'dotnet pack --no-build --no-restore'
-                sh 'dotnet publish'
+                //sh 'dotnet publish'
             }
         }
     }
