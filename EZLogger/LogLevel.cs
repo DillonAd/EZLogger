@@ -1,6 +1,6 @@
 using System;
 
-namespace EZLogger 
+namespace EZLogger
 {
     public enum LogLevel
     {
