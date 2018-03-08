@@ -12,15 +12,13 @@ pipeline {
                 checkout scm
                 sh 'dotnet restore'
                 sh 'dotnet build'
-                sh 'dotnet pack --no-build --no-restore'
-                //sh 'dotnet push --no-restore --version-suffix ' + env.BUILD_NUMBER
                 stash stashName
             }
         }
         stage('Test') {
             steps {
                 unstash stashName
-                sh 'dotnet test EZLogger.Test/EZLogger.Test.csproj'
+                sh 'dotnet test ./EZLogger.Test/EZLogger.Test.csproj'
                 stash stashName
             }
         }
@@ -33,7 +31,7 @@ pipeline {
             steps {
                 unstash stashName
                 sh 'dotnet pack --no-build --no-restore'
-                //sh 'dotnet publish'
+                sh 'dotnet publish --no-restore'
             }
         }
     }

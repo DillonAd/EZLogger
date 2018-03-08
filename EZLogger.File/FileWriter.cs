@@ -6,8 +6,14 @@ namespace EZLogger.File
     {
         private readonly IFormatter<string> _Formatter;
         private readonly object _LockObj;
-        
-        public string FileName { get; private set; }
+
+        public string FileName { get; }
+
+        public FileWriter(string fileName)
+        {
+            _Formatter = new DefaultFileMessageFormatter();
+            FileName = fileName;
+        }
 
         public FileWriter(IFormatter<string> formatter, string fileName)
         {

@@ -4,11 +4,11 @@ using System.Text;
 
 namespace EZLogger.File
 {
-    public class FileMessageFormatter : Formatter<string>
+    public class DefaultFileMessageFormatter : Formatter<string>
     {
         public override string FormatMessage(LogMessage message)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             if (message != null)
             {

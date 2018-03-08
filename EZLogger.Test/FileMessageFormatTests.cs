@@ -20,7 +20,7 @@ namespace EZLogger.Test
             string message = "test message";
 
             LogMessage msg = new LogMessage(level, message);
-            IFormatter<string> formatter = new FileMessageFormatter();
+            IFormatter<string> formatter = new DefaultFileMessageFormatter();
             string result = formatter.FormatMessage(msg);
 
             Assert.Contains(Enum.GetName(typeof(LogLevel), level), result);
@@ -38,7 +38,7 @@ namespace EZLogger.Test
             Exception ex = TestExceptionGenerator.GetValidException(message);
 
             LogMessage msg = new LogMessage(level, ex);
-            IFormatter<string> formatter = new FileMessageFormatter();
+            IFormatter<string> formatter = new DefaultFileMessageFormatter();
             string result = formatter.FormatMessage(msg);
 
             Assert.Contains(Enum.GetName(typeof(LogLevel), level), result);
@@ -50,7 +50,7 @@ namespace EZLogger.Test
         public void FileMessageFormat_NullLogMessage()
         {
             LogMessage msg = null;
-            IFormatter<string> formatter = new FileMessageFormatter();
+            IFormatter<string> formatter = new DefaultFileMessageFormatter();
             string result = formatter.FormatMessage(msg);
 
             Assert.Empty(result);
