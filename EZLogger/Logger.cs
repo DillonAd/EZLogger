@@ -15,25 +15,23 @@ namespace EZLogger
 
         public void LogMessage(string message)
         {
-            LogMessage logMessage = new LogMessage(LogLevel.Info, message);
-            _Writer.WriteMessage(logMessage);
+            LogMessage(message, LogLevel.Info);
         }
 
         public void LogMessage(string message, LogLevel level)
         {
-            LogMessage logMessage = new LogMessage(level, message);
+            var logMessage = new LogMessage(level, message);
             _Writer.WriteMessage(logMessage);
         }
 
         public void LogMessage(Exception ex)
         {
-            LogMessage logMessage = new LogMessage(LogLevel.Error, ex);
-            _Writer.WriteMessage(logMessage);
+            LogMessage(ex, LogLevel.Error);
         }
 
         public void LogMessage(Exception ex, LogLevel level)
         {
-            LogMessage logMessage = new LogMessage(level, ex);
+            var logMessage = new LogMessage(level, ex);
             _Writer.WriteMessage(logMessage);
         }
     }
