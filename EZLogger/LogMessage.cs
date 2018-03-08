@@ -6,10 +6,10 @@ namespace EZLogger
 {
     public class LogMessage
     {
-        public LogLevel Level { get; private set; }
-        public DateTime Date { get; private set; }
-        public Exception Exception { get; private set; }
-        public string Message { get; private set; }
+        public LogLevel Level { get; }
+        public DateTime Date { get; }
+        public Exception Exception { get; }
+        public string Message { get; }
 
         public LogMessage(LogLevel level, string message)
         {

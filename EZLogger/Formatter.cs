@@ -15,7 +15,7 @@ namespace EZLogger
                 return string.Empty;
             }
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append(ex.Message).Append(ex.StackTrace)
                 .Append(GetExceptionDetails(ex.InnerException));
 
