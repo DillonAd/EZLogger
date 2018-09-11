@@ -1,11 +1,14 @@
 ﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace EZLogger.File
 {
-    public class FileWriter : IWriter
+    public class FileWriter : IDisposable, IWriter
     {
-        private readonly IFormatter<string> _Formatter;
-        private static object _LockObj;
+        private readonly StreamWriter _writer;
+        private readonly IFormatter<string> _formatter;
+        private readonly object _lockObj;
 
         public string FileName { get; }
 
@@ -13,22 +16,36 @@ namespace EZLogger.File
 
         public FileWriter(IFormatter<string> formatter, string fileName)
         {
-            _Formatter = formatter;
-
-            if (_LockObj == null)
-            {
-                _LockObj = new object();
-            }
+            _formatter = formatter;
+            _writer = new StreamWriter(fileName, true);
+            _lockObj = new object();
 
             FileName = fileName;
         }
 
         public void WriteMessage(LogMessage message)
         {
-            string content = _Formatter.FormatMessage(message);
-            lock(_LockObj)
+            string content = _formatter.FormatMessage(message);
+            lock(_writer)
             {
-                System.IO.File.AppendAllText(FileName, content);
+                _writer.Write(content);
+            }
+        }
+
+        public async Task WriteMessageAsync(LogMessage message) =>
+            await Task.Run(() => WriteMessage(message));
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected void Dispose(bool disposing)
+        {
+            if(disposing)
+            {
+                _writer.Dispose();
             }
         }
     }
