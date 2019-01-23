@@ -33,12 +33,12 @@ namespace EZLogger.Test
 
         [Fact]
         [Trait("Category", "unit")]
-        public void FileMessageFormat_Message(LogLevel level)
+        public void FileMessageFormat_Message()
         {
             // Assemble
             string message = "test message";
 
-            LogMessage msg = new LogMessage(level, message);
+            LogMessage msg = new LogMessage(LogLevel.Critical, message);
             IFormatter<string> formatter = new DefaultFileMessageFormatter();
             
             // Act
