@@ -19,7 +19,7 @@ stage('Test') {
 }
 stage('Approval') {
     timeout(time: 7, unit: "DAYS") {
-        input(message: "Deploy?", ok: "Make it so.", parameters: [$class: 'TextParameterDefinition', defaultValue: 'uat', description: 'Environment', name: 'env'])
+        input(message: "Deploy?", ok: "Make it so.")
     }
 }
 stage('Deploy') {
