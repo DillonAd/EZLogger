@@ -27,12 +27,12 @@ stage('Deploy') {
         if("${BRANCH_NAME}" == 'master') {
             tagName = ""
         } else {
-            tagName = "snapshot-${BUILD_NUMBER}"
+            tagName = "--version-suffix snapshot-${BUILD_NUMBER}"
         }
 
         unstash "${stash_name}-Test"
 
-        sh "dotnet pack --configuration Release --output ../out --version-suffix ${tagName}"
+        sh "dotnet pack --configuration Release --output ../out ${tagName}"
 
         withCredentials([string(credentialsId: 'NUGET', variable: 'NUGET_API_KEY')]) {    
             sh "dotnet nuget push ./out/*.nupkg -k ${NUGET_API_KEY} --source https://api.nuget.org/v3/index.json"
