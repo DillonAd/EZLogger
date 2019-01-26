@@ -1,38 +1,41 @@
-final String stashName = "EZLogger-" + env.BUILD_NUMBER;
+final stash_name = "${JOB_NAME}-${BUILD_ID}".replace('/','_')
 
-pipeline {
-    //agent {
-    //    docker { image 'microsoft/dotnet:latest' }
-    //}
-    agent any
+stage("Build") {
+    node {
+        checkout scm
 
-    stages {
-        stage('Build') {
-            steps {
-                checkout scm
-                sh 'dotnet restore'
-                sh 'dotnet build'
-                stash stashName
-            }
+        sh 'dotnet restore'
+        sh 'dotnet build --configuration Release'
+        
+        stash "${stash_name}-Build"
+    }
+}
+stage('Test') {
+    node {
+        unstash "${stash_name}-Build"
+        sh 'dotnet test ./EZLogger.Test/EZLogger.Test.csproj'
+        stash "${stash_name}-Test"
+    }
+}
+stage('Approval') {
+    timeout(time: 7, unit: "DAYS") {
+        input(message: "Deploy?", ok: "Make it so.")
+    }
+}
+stage('Deploy') {
+    node {
+        if("${BRANCH_NAME}" == 'master') {
+            tagName = ""
+        } else {
+            tagName = "snapshot-${BUILD_NUMBER}"
         }
-        stage('Test') {
-            steps {
-                unstash stashName
-                sh 'dotnet test ./EZLogger.Test/EZLogger.Test.csproj'
-                stash stashName
-            }
-        }
-        stage('Publish') {
-            input {
-                message "Deploy?"
-                ok "Make it so."
-                submitter "dillon"
-            }
-            steps {
-                unstash stashName
-                sh 'dotnet pack --no-build --no-restore'
-                sh 'dotnet publish --no-restore'
-            }
+
+        unstash "${stash_name}-Test"
+
+        sh "dotnet pack --configuration Release --output ../out --version-suffix ${tagName}"
+
+        withCredentials([string(credentialsId: 'NUGET', variable: 'NUGET_API_KEY')]) {    
+            sh "dotnet nuget push ./out/*.nupkg -k ${NUGET_API_KEY} --source https://api.nuget.org/v3/index.json"
         }
     }
 }

@@ -1,38 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EZLogger
 {
     public class Logger : ILogger
     {
-        private readonly IWriter _Writer;
+        private readonly IWriter _writer;
+        private readonly Queue<LogMessage> _messages;
+        private readonly Task _processor;
+        private bool _disposing { get; set; }
 
+        
         public Logger(IWriter writer)
         {
-            _Writer = writer;
+            _writer = writer;
+            _messages = new Queue<LogMessage>();
+            _processor = Task.Run(() => PersistMessages());
+            _disposing = false;
         }
 
-        public void LogMessage(string message)
+        public void LogMessage(string message, LogLevel level) =>
+            _messages.Enqueue(new LogMessage(level, message));
+
+        public void Dispose()
         {
-            LogMessage(message, LogLevel.Info);
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        public void LogMessage(string message, LogLevel level)
+        public virtual void Dispose(bool disposing)
         {
-            var logMessage = new LogMessage(level, message);
-            _Writer.WriteMessage(logMessage);
+            if(disposing)
+            {
+                _disposing = true;
+
+                _processor.Wait(10000);
+                _processor.Dispose();
+                _messages.Clear();
+                _writer.Dispose();
+            }
         }
 
-        public void LogMessage(Exception ex)
+        private void PersistMessages()
         {
-            LogMessage(ex, LogLevel.Error);
-        }
+            LogMessage message;
 
-        public void LogMessage(Exception ex, LogLevel level)
-        {
-            var logMessage = new LogMessage(level, ex);
-            _Writer.WriteMessage(logMessage);
+            while(!_disposing || _messages.Count > 0)
+            {
+                if(_messages.Count > 0)
+                {
+                    message = _messages.Dequeue();
+                    _writer.WriteMessage(message);        
+                }
+
+                Thread.Sleep(100);
+            }
         }
     }
 }

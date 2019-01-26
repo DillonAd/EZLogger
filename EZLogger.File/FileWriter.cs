@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace EZLogger.File
 {
-    public class FileWriter : IDisposable, IWriter
+    public class FileWriter : IWriter
     {
         private readonly StreamWriter _writer;
         private readonly IFormatter<string> _formatter;

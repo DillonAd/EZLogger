@@ -2,11 +2,8 @@ using System;
 
 namespace EZLogger
 {
-    public interface ILogger
+    public interface ILogger : IDisposable
     {
-        void LogMessage(string message);
         void LogMessage(string message, LogLevel level);
-        void LogMessage(Exception ex);
-        void LogMessage(Exception ex, LogLevel level);
     }
 }

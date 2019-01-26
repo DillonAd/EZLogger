@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZLogger.File", "EZLogger.F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZLogger.Test", "EZLogger.Test\EZLogger.Test.csproj", "{ADECC730-E422-464F-AE32-47E6312150C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZLogger.Console", "EZLogger.Console\EZLogger.Console.csproj", "{DECC21B3-5D6D-4705-B82D-1B130EECACA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{ADECC730-E422-464F-AE32-47E6312150C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADECC730-E422-464F-AE32-47E6312150C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADECC730-E422-464F-AE32-47E6312150C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DECC21B3-5D6D-4705-B82D-1B130EECACA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DECC21B3-5D6D-4705-B82D-1B130EECACA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DECC21B3-5D6D-4705-B82D-1B130EECACA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DECC21B3-5D6D-4705-B82D-1B130EECACA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

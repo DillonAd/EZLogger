@@ -8,18 +8,7 @@ namespace EZLogger
     {
         public abstract T FormatMessage(LogMessage message);
 
-        public string GetExceptionDetails(Exception ex)
-        {
-            if (ex == null)
-            {
-                return string.Empty;
-            }
-
-            var sb = new StringBuilder();
-            sb.Append(ex.Message).Append(ex.StackTrace)
-                .Append(GetExceptionDetails(ex.InnerException));
-
-            return sb.ToString();
-        }
+        protected string GetExceptionDetails(Exception ex) =>
+            ex == null ? string.Empty : $"{ex.Message}\n{ex.StackTrace}\n\n{GetExceptionDetails(ex.InnerException)}";
     }
 }
