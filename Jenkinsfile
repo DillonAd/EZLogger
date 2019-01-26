@@ -27,7 +27,7 @@ stage('Deploy') {
         if("${BRANCH_NAME}" == 'master') {
             tagName = ""
         } else {
-            tagName = "--version-suffix snapshot-${BUILD_NUMBER}"
+            tagName = "--version-suffix snapshot-${BUILD_TAG}"
         }
 
         unstash "${stash_name}-Test"
