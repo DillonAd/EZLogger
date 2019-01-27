@@ -25,10 +25,12 @@ stage('Approval') {
 }
 stage('Deploy') {
     node {
-        if("${BRANCH_NAME}" == 'master') {
+        if ("${BRANCH_NAME}" == 'master') {
             tagName = ""
-        } else {
+        } else if ("${BRANCH_NAME}".contains("-PR-")) {
             tagName = "--version-suffix snapshot-${BUILD_TAG}"
+        } else {
+            return
         }
 
         unstash "${stash_name}-Test"
