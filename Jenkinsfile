@@ -2,6 +2,7 @@ final stash_name = "${JOB_NAME}-${BUILD_ID}".replace('/','_')
 
 stage("Build") {
     node {
+        deleteDir()
         checkout scm
 
         sh 'dotnet restore'
