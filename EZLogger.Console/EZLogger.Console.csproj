@@ -2,6 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Dillon Adams</Authors>
+    <Product>EZLogger.Console</Product>
+    <PackageProjectUrl>https://github.com/DillonAd/EZLogger</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/DillonAd/EZLogger/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/DillonAd/EZLogger</RepositoryUrl>
+    <PackageTags>logging easy simple</PackageTags>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

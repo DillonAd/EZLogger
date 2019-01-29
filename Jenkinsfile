@@ -2,6 +2,7 @@ final stash_name = "${JOB_NAME}-${BUILD_ID}".replace('/','_')
 
 stage("Build") {
     node {
+        deleteDir()
         checkout scm
 
         sh 'dotnet restore'
@@ -24,15 +25,17 @@ stage('Approval') {
 }
 stage('Deploy') {
     node {
-        if("${BRANCH_NAME}" == 'master') {
+        if ("${BRANCH_NAME}" == 'master') {
             tagName = ""
+        } else if ("${BRANCH_NAME}".contains("-PR-")) {
+            tagName = "--version-suffix snapshot-${BUILD_TAG}"
         } else {
-            tagName = "snapshot-${BUILD_NUMBER}"
+            return
         }
 
         unstash "${stash_name}-Test"
 
-        sh "dotnet pack --configuration Release --output ../out --version-suffix ${tagName}"
+        sh "dotnet pack --configuration Release --output ../out ${tagName}"
 
         withCredentials([string(credentialsId: 'NUGET', variable: 'NUGET_API_KEY')]) {    
             sh "dotnet nuget push ./out/*.nupkg -k ${NUGET_API_KEY} --source https://api.nuget.org/v3/index.json"
