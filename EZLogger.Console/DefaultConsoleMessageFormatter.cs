@@ -15,9 +15,9 @@ namespace EZLogger.Console
                 sb.Append(message.Date.ToLongDateString()).Append(" ")
                     .Append(message.Date.ToLongTimeString()).Append(" - ")
                     .Append(Enum.GetName(typeof(LogLevel), message.Level)).Append(" - ")
-                    .Append(message.Message).Append(Environment.NewLine)
+                    .Append(message.Message)
                     .Append(GetExceptionDetails(message.Exception))
-                    .Append(Environment.NewLine).Append(Environment.NewLine);
+                    .Append(Environment.NewLine);
             }
 
             return sb.ToString();

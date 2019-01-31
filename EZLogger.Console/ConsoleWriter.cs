@@ -32,12 +32,12 @@ namespace EZLogger.Console
             }
             else
             {
-                System.Console.WriteLine(content.Substring(0, levelIdx));
+                System.Console.Write(content.Substring(0, levelIdx));
                 
                 System.Console.ForegroundColor = consoleColors.ForegroundColor;
                 System.Console.BackgroundColor = consoleColors.BackgroundColor;
                 
-                System.Console.WriteLine(levelStr);
+                System.Console.Write(levelStr);
 
                 System.Console.ForegroundColor = _defaultForegroundColor;
                 System.Console.BackgroundColor = _defaultBackgroundColor;
@@ -46,7 +46,7 @@ namespace EZLogger.Console
                 
                 if(part3Idx < content.Length)
                 {
-                    System.Console.WriteLine(content.Substring(part3Idx));
+                    System.Console.Write(content.Substring(part3Idx));
                 }
             }
         }
