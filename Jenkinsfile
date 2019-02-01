@@ -36,9 +36,23 @@ stage('Deploy') {
         unstash "${stash_name}-Test"
 
         sh "dotnet pack --configuration Release --output ../out ${tagName}"
+ 
+        def files = findFiles(glob: '**/*.nupkg')
+        def exceptions = "";
 
-        withCredentials([string(credentialsId: 'NUGET', variable: 'NUGET_API_KEY')]) {    
-            sh "dotnet nuget push ./out/*.nupkg -k ${NUGET_API_KEY} --source https://api.nuget.org/v3/index.json"
+        withCredentials([string(credentialsId: 'NUGET', variable: 'NUGET_API_KEY')]) {
+            files.each { file ->
+                try {
+                    sh "dotnet nuget push ${file} -k ${NUGET_API_KEY} --source https://api.nuget.org/v3/index.json"
+                } catch(Exception ex) {
+                    println ex
+                    exceptions += "${ex}\n"
+                }
+            }
+        }
+
+        if (exceptions?.trim()) {
+            throw new Exception(exceptions)
         }
     }
 }
