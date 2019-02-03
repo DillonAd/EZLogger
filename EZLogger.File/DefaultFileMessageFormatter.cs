@@ -22,8 +22,6 @@ namespace EZLogger.File
                     sb.Append(Environment.NewLine)
                       .Append(GetExceptionDetails(message.Exception));
                 }
-
-                sb.Append(Environment.NewLine);
             }
 
             return sb.ToString();
