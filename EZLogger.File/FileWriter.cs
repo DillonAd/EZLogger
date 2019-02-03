@@ -28,7 +28,7 @@ namespace EZLogger.File
             string content = _formatter.FormatMessage(message);
             lock(_writer)
             {
-                _writer.Write(content);
+                _writer.WriteLine(content);
             }
         }
 
