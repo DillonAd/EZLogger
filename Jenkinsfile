@@ -18,13 +18,6 @@ stage('Test') {
         stash "${stash_name}-Test"
     }
 }
-stage('Approval') {
-    if ("${BRANCH_NAME}" == 'master' || "${BRANCH_NAME}".startsWith("PR-")) {
-        timeout(time: 7, unit: "DAYS") {
-            input(message: "Deploy?", ok: "Make it so.")
-        }
-    }
-}
 stage('Deploy') {
     node {
         if ("${BRANCH_NAME}" == 'master') {
