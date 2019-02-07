@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,17 +8,20 @@ namespace EZLogger
     public class Logger : ILogger
     {
         private readonly IWriter _writer;
-        private readonly Queue<LogMessage> _messages;
+        private readonly ConcurrentQueue<LogMessage> _messages;
+        private readonly CancellationTokenSource _cancellationTokenSource;
+        private readonly CancellationToken _cancellationToken;
         private readonly Task _processor;
         private bool _disposing { get; set; }
-
         
         public Logger(IWriter writer)
         {
-            _writer = writer;
-            _messages = new Queue<LogMessage>();
-            _processor = Task.Run(() => PersistMessages());
             _disposing = false;
+            _writer = writer;
+            _messages = new ConcurrentQueue<LogMessage>();
+            _cancellationTokenSource = new CancellationTokenSource();
+            _cancellationToken = _cancellationTokenSource.Token;
+            _processor = Task.Run(() => PersistMessages(), _cancellationToken);
         }
 
         public void LogMessage(string message, LogLevel level) =>
@@ -35,10 +38,9 @@ namespace EZLogger
             if(disposing)
             {
                 _disposing = true;
-
                 _processor.Wait(10000);
                 _processor.Dispose();
-                _messages.Clear();
+                _cancellationTokenSource.Dispose();
                 _writer.Dispose();
             }
         }
@@ -49,13 +51,14 @@ namespace EZLogger
 
             while(!_disposing || _messages.Count > 0)
             {
-                if(_messages.Count > 0)
+                if(_messages.TryDequeue(out message))
                 {
-                    message = _messages.Dequeue();
                     _writer.WriteMessage(message);        
                 }
-
-                Thread.Sleep(100);
+                else
+                {
+                    Thread.Sleep(100);
+                }
             }
         }
     }
