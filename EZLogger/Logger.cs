@@ -9,8 +9,6 @@ namespace EZLogger
     {
         private readonly IWriter _writer;
         private readonly ConcurrentQueue<LogMessage> _messages;
-        private readonly CancellationTokenSource _cancellationTokenSource;
-        private readonly CancellationToken _cancellationToken;
         private readonly Task _processor;
         private bool _disposing { get; set; }
         
@@ -19,9 +17,7 @@ namespace EZLogger
             _disposing = false;
             _writer = writer;
             _messages = new ConcurrentQueue<LogMessage>();
-            _cancellationTokenSource = new CancellationTokenSource();
-            _cancellationToken = _cancellationTokenSource.Token;
-            _processor = Task.Run(() => PersistMessages(), _cancellationToken);
+            _processor = Task.Run(() => PersistMessages());
         }
 
         public void LogMessage(string message, LogLevel level) =>
@@ -40,7 +36,6 @@ namespace EZLogger
                 _disposing = true;
                 _processor.Wait(10000);
                 _processor.Dispose();
-                _cancellationTokenSource.Dispose();
                 _writer.Dispose();
             }
         }
