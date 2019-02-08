@@ -8,7 +8,6 @@ namespace EZLogger.File
     {
         private readonly StreamWriter _writer;
         private readonly IFormatter<string> _formatter;
-        private readonly object _lockObj;
 
         public string FileName { get; }
 
@@ -18,7 +17,6 @@ namespace EZLogger.File
         {
             _formatter = formatter;
             _writer = new StreamWriter(fileName, true);
-            _lockObj = new object();
 
             FileName = fileName;
         }
@@ -26,10 +24,7 @@ namespace EZLogger.File
         public void WriteMessage(LogMessage message)
         {
             string content = _formatter.FormatMessage(message);
-            lock(_writer)
-            {
-                _writer.WriteLine(content);
-            }
+            _writer.WriteLine(content);
         }
 
         public async Task WriteMessageAsync(LogMessage message) =>
@@ -45,6 +40,7 @@ namespace EZLogger.File
         {
             if(disposing)
             {
+                _writer.Flush();
                 _writer.Dispose();
             }
         }
