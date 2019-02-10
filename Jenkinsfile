@@ -18,18 +18,14 @@ stage('Test') {
         stash "${stash_name}-Test"
     }
 }
-stage('Approval') {
-    timeout(time: 7, unit: "DAYS") {
-        input(message: "Deploy?", ok: "Make it so.")
-    }
-}
 stage('Deploy') {
     node {
         if ("${BRANCH_NAME}" == 'master') {
             tagName = ""
-        } else if ("${BRANCH_NAME}".contains("-PR-")) {
+        } else if ("${BRANCH_NAME}".startsWith("PR-")) {
             tagName = "--version-suffix snapshot-${BUILD_TAG}"
         } else {
+            println "Build is not for a Pull Request or the main line of development. Skipping publish. Branch Name: ${BUILD_TAG}"
             return
         }
 

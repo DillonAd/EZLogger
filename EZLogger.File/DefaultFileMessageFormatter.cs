@@ -8,19 +8,27 @@ namespace EZLogger.File
     {
         public override string FormatMessage(LogMessage message)
         {
-            var sb = new StringBuilder();
-
-            if (message != null)
+            if (message != null && !string.IsNullOrWhiteSpace(message.Message))
             {
-                sb.Append(message.Date.ToLongDateString()).Append(" ")
-                    .Append(message.Date.ToLongTimeString()).Append(" - ")
-                    .Append(Enum.GetName(typeof(LogLevel), message.Level)).Append(" - ")
-                    .Append(message.Message).Append(Environment.NewLine)
-                    .Append(GetExceptionDetails(message.Exception))
-                    .Append(Environment.NewLine).Append(Environment.NewLine);
-            }
+                var sb = new StringBuilder();
 
-            return sb.ToString();
+                sb.Append(message.Date.ToLongDateString()).Append(" ")
+                  .Append(message.Date.ToLongTimeString()).Append(" - ")
+                  .Append(Enum.GetName(typeof(LogLevel), message.Level)).Append(" - ")
+                  .Append(message.Message);
+                
+                if(message.Exception != null)
+                {
+                    sb.Append(Environment.NewLine)
+                      .Append(GetExceptionDetails(message.Exception));
+                }
+
+                return sb.ToString();
+            }
+            else
+            {
+                return string.Empty;   
+            }
         }
     }
 }
