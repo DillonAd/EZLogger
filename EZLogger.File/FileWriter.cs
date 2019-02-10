@@ -40,8 +40,11 @@ namespace EZLogger.File
         {
             if(disposing)
             {
-                _writer.Flush();
-                _writer.Dispose();
+                if(_writer != null && _writer.BaseStream != null)
+                {
+                    _writer.Flush();
+                    _writer.Dispose();
+                }
             }
         }
     }
