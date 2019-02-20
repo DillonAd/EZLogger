@@ -9,20 +9,19 @@ namespace EZLogger
     {
         private readonly IWriter _writer;
         private readonly ConcurrentQueue<LogMessage> _messages;
-        private event LogMessageHandler _logMessage;
-            
+        private readonly Task _processor;
+        private bool _disposing { get; set; }
+        
         public Logger(IWriter writer)
         {
+            _disposing = false;
             _writer = writer;
             _messages = new ConcurrentQueue<LogMessage>();
-            _logMessage += PersistMessage;
+            _processor = Task.Run(() => PersistMessages());
         }
 
-        public void LogMessage(string message, LogLevel level)
-        {
+        public void LogMessage(string message, LogLevel level) =>
             _messages.Enqueue(new LogMessage(level, message));
-            _logMessage();
-        }
 
         public void Dispose()
         {
@@ -34,17 +33,26 @@ namespace EZLogger
         {
             if(disposing)
             {
+                _disposing = true;
+                _processor.Wait(10000);
+                _processor.Dispose();
                 _writer.Dispose();
             }
         }
 
-        private void PersistMessage()
+        private void PersistMessages()
         {
-            lock(_writer)
+            LogMessage message;
+
+            while(!_disposing || !_messages.IsEmpty)
             {
-                if(_messages.TryDequeue(out var message))
+                if(_messages.TryDequeue(out message))
                 {
-                    _writer.WriteMessage(message);
+                    _writer.WriteMessage(message);        
+                }
+                else
+                {
+                    Thread.Sleep(100);
                 }
             }
         }
