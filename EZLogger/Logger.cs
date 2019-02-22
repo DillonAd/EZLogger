@@ -11,14 +11,13 @@ namespace EZLogger
         private readonly ConcurrentQueue<LogMessage> _messages;
         private readonly Task _processor;
         private bool _disposing { get; set; }
-
         
         public Logger(IWriter writer)
         {
+            _disposing = false;
             _writer = writer;
             _messages = new ConcurrentQueue<LogMessage>();
             _processor = Task.Run(() => PersistMessages());
-            _disposing = false;
         }
 
         public void LogMessage(string message, LogLevel level) =>

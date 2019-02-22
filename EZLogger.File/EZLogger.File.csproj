@@ -8,7 +8,7 @@
     <PackageLicenseUrl>https://github.com/DillonAd/EZLogger/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/DillonAd/EZLogger</RepositoryUrl>
     <PackageTags>logging easy simple</PackageTags>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <VersionPrefix>1.0.1</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
