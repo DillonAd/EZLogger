@@ -11,10 +11,28 @@ Once that is created, it can be passed to the `FileLogger` and then setup is don
 
 ``` cpp
 
-IFormatter<string> formatter = new FileMessageFormatter();
-IWriter fileWriter = new FileWriter(formatter, "Log.log");
+IWriter fileWriter = new FileWriter("Log.log");
 ILogger fileLogger = new Logger(fileWriter);
 
-`
+```
+
+The other option is to use the extension methods provided with each implementation:
+
+``` cpp
+
+var host = new HostBuilder()
+    .ConfigureServices(serviceCollection =>
+    {
+            serviceCollection.AddFileLogger("log.txt");
+    })
+    .Build();
+
+```
+
+## IWriter Implementations
+
+The supported `IWriter` implementations are:
+ - Console
+ - File
 
 Happy Logging!
