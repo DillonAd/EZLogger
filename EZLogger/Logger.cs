@@ -44,7 +44,7 @@ namespace EZLogger
         {
             LogMessage message;
 
-            while(!_disposing)
+            while(!_disposing || !_messages.IsEmpty)
             {
                 if(_messages.TryDequeue(out message))
                 {
