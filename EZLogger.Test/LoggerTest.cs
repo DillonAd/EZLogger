@@ -29,9 +29,9 @@ namespace EZLogger.Test
             }
 
             // Assert
+            Assert.Single(writtenMessages);
             Assert.Equal(msg, writtenMessages[0].Message);
             Assert.Equal(level, writtenMessages[0].Level);
-            Assert.Single(writtenMessages);
         }
 
         
