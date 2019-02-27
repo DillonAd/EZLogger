@@ -5,6 +5,7 @@ namespace EZLogger
     public interface ILogger : IDisposable
     {
         void LogMessage(string message, LogLevel level);
+        void LogMessage(Exception ex, LogLevel level);
         void Critical(string message);
         void Critical(Exception ex);
         void Debug(string message);

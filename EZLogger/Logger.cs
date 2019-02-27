@@ -23,41 +23,44 @@ namespace EZLogger
         public void LogMessage(string message, LogLevel level) =>
             _messages.Enqueue(new LogMessage(level, message));
 
+        public void LogMessage(Exception ex, LogLevel level) =>
+            LogMessage(GetExceptionMessage(ex), level);
+
         public void Critical(string message) =>
             LogMessage(message, LogLevel.Critical);
 
         public void Critical(Exception ex) =>
-            LogMessage(GetExceptionMessage(ex), LogLevel.Critical);
+            LogMessage(ex, LogLevel.Critical);
 
         public void Debug(string message) =>
             LogMessage(message, LogLevel.Debug);
 
         public void Debug(Exception ex) =>
-            LogMessage(GetExceptionMessage(ex), LogLevel.Debug);
+            LogMessage(ex, LogLevel.Debug);
 
         public void Error(string message) =>
             LogMessage(message, LogLevel.Error);
 
         public void Error(Exception ex) =>
-            LogMessage(GetExceptionMessage(ex), LogLevel.Error);
+            LogMessage(ex, LogLevel.Error);
 
         public void Info(string message) =>
             LogMessage(message, LogLevel.Info);
 
         public void Info(Exception ex) =>
-            LogMessage(GetExceptionMessage(ex), LogLevel.Info);
+            LogMessage(ex, LogLevel.Info);
 
         public void Trace(string message) =>
             LogMessage(message, LogLevel.Trace);
 
         public void Trace(Exception ex) =>
-            LogMessage(GetExceptionMessage(ex), LogLevel.Trace);
+            LogMessage(ex, LogLevel.Trace);
 
         public void Warning(string message) =>
             LogMessage(message, LogLevel.Warning);
 
         public void Warning(Exception ex) =>
-            LogMessage(GetExceptionMessage(ex), LogLevel.Warning);
+            LogMessage(ex, LogLevel.Warning);
 
         public void Dispose()
         {

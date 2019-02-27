@@ -35,6 +35,31 @@ namespace EZLogger.Test
             Assert.Equal(level, writtenMessages[0].Level);
         }
 
+        [Fact]
+        [Trait("Category", "unit")]
+        public void LogMessageWithLevel()
+        {
+            // Assemble
+            List<LogMessage> writtenMessages = new List<LogMessage>();
+
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<LogMessage>()))
+                .Callback((LogMessage message) => writtenMessages.Add(message));
+
+            var ex = new Exception("test message");
+            LogLevel level = LogLevel.Debug;
+
+            // Act
+            using(ILogger logger = new Logger(mockObj.Object))
+            {
+                logger.LogMessage(ex, level);
+            }
+
+            // Assert
+            Assert.Single(writtenMessages);
+            Assert.Contains(ex.Message, writtenMessages[0].Message);
+            Assert.Equal(level, writtenMessages[0].Level);
+        }
         
         [Theory]
         [InlineData(LogLevel.Debug)]
@@ -63,6 +88,33 @@ namespace EZLogger.Test
             Assert.Equal(level, writtenMessages[0].Level);
         }
 
+        [Theory]
+        [InlineData(LogLevel.Debug)]
+        [InlineData(LogLevel.Error)]
+        [InlineData(LogLevel.Info)]
+        [InlineData(LogLevel.Warning)]
+        [Trait("Category", "unit")]
+        public void LogException_AllLevels(LogLevel level)
+        {
+            // Assemble
+            List<LogMessage> writtenMessages = new List<LogMessage>();
+
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<LogMessage>()))
+                   .Callback((LogMessage message) => writtenMessages.Add(message));
+
+            var ex = new Exception("test message");
+            
+            // Act
+            using(ILogger logger = new Logger(mockObj.Object))
+            {
+                logger.LogMessage(ex, level);
+            }
+
+            // Assert
+            Assert.Equal(level, writtenMessages[0].Level);
+        }
+
         [Fact]
         [Trait("Category", "unit")]
         public void Log_All_Messages()
@@ -80,6 +132,32 @@ namespace EZLogger.Test
             for(int i = 0; i < messageCount; i++)
             {
                 logger.LogMessage(i.ToString(), LogLevel.Info);
+            }
+
+            // Act
+            logger.Dispose();
+
+            // Assert
+            Assert.Equal(messageCount, messages.Count);
+        }
+
+        [Fact]
+        [Trait("Category", "unit")]
+        public void Log_All_Exceptions()
+        {
+            // Assemble
+            var messages = new List<LogMessage>();
+            var writer = new Mock<IWriter>();
+            writer.Setup(w => w.WriteMessage(It.IsAny<LogMessage>()))
+                  .Callback<LogMessage>(m => messages.Add(m));
+
+            var logger = new Logger(writer.Object);
+
+            const int messageCount = 50;
+
+            for(int i = 0; i < messageCount; i++)
+            {
+                logger.LogMessage(new Exception(i.ToString()), LogLevel.Info);
             }
 
             // Act
@@ -117,6 +195,32 @@ namespace EZLogger.Test
 
         [Fact]
         [Trait("Category", "unit")]
+        public void Log_All_Exceptions_Text()
+        {
+            // Assemble
+            var messages = new List<LogMessage>();
+            var writer = new Mock<IWriter>();
+            writer.Setup(w => w.WriteMessage(It.IsAny<LogMessage>()))
+                  .Callback<LogMessage>(m => messages.Add(m));
+
+            var logger = new Logger(writer.Object);
+
+            const int messageCount = 50;
+
+            for(int i = 0; i < messageCount; i++)
+            {
+                logger.LogMessage(new Exception(i.ToString()), LogLevel.Info);
+            }
+
+            // Act
+            logger.Dispose();
+
+            // Assert
+            Assert.All(messages, m => Assert.False(string.IsNullOrWhiteSpace(m.Message)));
+        }
+
+        [Fact]
+        [Trait("Category", "unit")]
         public void Log_Messages_With_Timeout()
         {
             // Assemble
@@ -132,6 +236,33 @@ namespace EZLogger.Test
             for(int i = 0; i < messageCount; i++)
             {
                 logger.LogMessage(i.ToString(), LogLevel.Info);
+            }
+
+            // Act
+            logger.Dispose();
+
+            // Assert
+            Assert.NotEmpty(messages);
+            Assert.InRange(messages.Count, 0, messageCount);
+        }
+
+        [Fact]
+        [Trait("Category", "unit")]
+        public void Log_Exceptions_With_Timeout()
+        {
+            // Assemble
+            var messages = new List<LogMessage>();
+            var writer = new Mock<IWriter>();
+            writer.Setup(w => w.WriteMessage(It.IsAny<LogMessage>()))
+                  .Callback<LogMessage>(m => messages.Add(m));
+
+            var logger = new Logger(writer.Object);
+
+            const int messageCount = 100000;
+
+            for(int i = 0; i < messageCount; i++)
+            {
+                logger.LogMessage(new Exception(i.ToString()), LogLevel.Info);
             }
 
             // Act
