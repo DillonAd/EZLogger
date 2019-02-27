@@ -26,20 +26,38 @@ namespace EZLogger
         public void Critical(string message) =>
             LogMessage(message, LogLevel.Critical);
 
+        public void Critical(Exception ex) =>
+            LogMessage(GetExceptionMessage(ex), LogLevel.Critical);
+
         public void Debug(string message) =>
             LogMessage(message, LogLevel.Debug);
+
+        public void Debug(Exception ex) =>
+            LogMessage(GetExceptionMessage(ex), LogLevel.Debug);
 
         public void Error(string message) =>
             LogMessage(message, LogLevel.Error);
 
+        public void Error(Exception ex) =>
+            LogMessage(GetExceptionMessage(ex), LogLevel.Error);
+
         public void Info(string message) =>
             LogMessage(message, LogLevel.Info);
+
+        public void Info(Exception ex) =>
+            LogMessage(GetExceptionMessage(ex), LogLevel.Info);
 
         public void Trace(string message) =>
             LogMessage(message, LogLevel.Trace);
 
+        public void Trace(Exception ex) =>
+            LogMessage(GetExceptionMessage(ex), LogLevel.Trace);
+
         public void Warning(string message) =>
             LogMessage(message, LogLevel.Warning);
+
+        public void Warning(Exception ex) =>
+            LogMessage(GetExceptionMessage(ex), LogLevel.Warning);
 
         public void Dispose()
         {
@@ -57,6 +75,13 @@ namespace EZLogger
                 _writer.Dispose();
             }
         }
+
+        // This method uses string.Format instead of $ interpolation
+        // to be backwards compatible with previous versions of C#.
+        // Once the dollar sign interpolation method is ubiquitous
+        // this can be changed to be more concise.
+        private string GetExceptionMessage(Exception ex) =>
+            ex == null ? string.Empty : string.Format("{0}{1}{2}{3}", ex.Message, ex.StackTrace, Environment.NewLine, GetExceptionMessage(ex.InnerException));
 
         private void PersistMessages()
         {

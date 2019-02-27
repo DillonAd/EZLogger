@@ -187,6 +187,30 @@ namespace EZLogger.Test
 
         [Fact]
         [Trait("Category", "unit")]
+        public void Log_Critical_Exception()
+        {
+            // Assemble
+            const string messageInput = "His name was Robert Paulson.";
+
+            var messages = new List<LogMessage>();
+            var writer = new Mock<IWriter>();
+            writer.Setup(w => w.WriteMessage(It.Is<LogMessage>(l => l.Level == LogLevel.Critical)))
+                  .Callback<LogMessage>(m => messages.Add(m));
+            
+            var ex = new Exception(messageInput);
+
+            // Act
+            using(var logger = new Logger(writer.Object))
+            {
+                logger.Critical(ex);
+            }
+            
+            // Assert
+            Assert.Contains(messageInput, messages.First().Message);
+        }
+
+        [Fact]
+        [Trait("Category", "unit")]
         public void Log_Debug()
         {
             // Assemble
@@ -201,7 +225,6 @@ namespace EZLogger.Test
                 logger.Debug("test");
             }
             
-
             // Assert
             Assert.Equal(LogLevel.Debug, messages.First().Level);
         }
@@ -230,6 +253,30 @@ namespace EZLogger.Test
         
         [Fact]
         [Trait("Category", "unit")]
+        public void Log_Debug_Exception()
+        {
+            // Assemble
+            const string messageInput = "His name was Robert Paulson.";
+
+            var messages = new List<LogMessage>();
+            var writer = new Mock<IWriter>();
+            writer.Setup(w => w.WriteMessage(It.Is<LogMessage>(l => l.Level == LogLevel.Debug)))
+                  .Callback<LogMessage>(m => messages.Add(m));
+            
+            var ex = new Exception(messageInput);
+
+            // Act
+            using(var logger = new Logger(writer.Object))
+            {
+                logger.Debug(ex);
+            }
+            
+            // Assert
+            Assert.Contains(messageInput, messages.First().Message);
+        }
+
+        [Fact]
+        [Trait("Category", "unit")]
         public void Log_Error()
         {
             // Assemble
@@ -244,7 +291,6 @@ namespace EZLogger.Test
                 logger.Error("test");
             }
             
-
             // Assert
             Assert.Equal(LogLevel.Error, messages.First().Level);
         }
@@ -273,6 +319,30 @@ namespace EZLogger.Test
 
         [Fact]
         [Trait("Category", "unit")]
+        public void Log_Error_Exception()
+        {
+            // Assemble
+            const string messageInput = "His name was Robert Paulson.";
+
+            var messages = new List<LogMessage>();
+            var writer = new Mock<IWriter>();
+            writer.Setup(w => w.WriteMessage(It.Is<LogMessage>(l => l.Level == LogLevel.Error)))
+                  .Callback<LogMessage>(m => messages.Add(m));
+            
+            var ex = new Exception(messageInput);
+
+            // Act
+            using(var logger = new Logger(writer.Object))
+            {
+                logger.Error(ex);
+            }
+            
+            // Assert
+            Assert.Contains(messageInput, messages.First().Message);
+        }
+
+        [Fact]
+        [Trait("Category", "unit")]
         public void Log_Info()
         {
             // Assemble
@@ -287,7 +357,6 @@ namespace EZLogger.Test
                 logger.Info("test");
             }
             
-
             // Assert
             Assert.Equal(LogLevel.Info, messages.First().Level);
         }
@@ -316,6 +385,30 @@ namespace EZLogger.Test
 
         [Fact]
         [Trait("Category", "unit")]
+        public void Log_Info_Exception()
+        {
+            // Assemble
+            const string messageInput = "His name was Robert Paulson.";
+
+            var messages = new List<LogMessage>();
+            var writer = new Mock<IWriter>();
+            writer.Setup(w => w.WriteMessage(It.Is<LogMessage>(l => l.Level == LogLevel.Info)))
+                  .Callback<LogMessage>(m => messages.Add(m));
+            
+            var ex = new Exception(messageInput);
+
+            // Act
+            using(var logger = new Logger(writer.Object))
+            {
+                logger.Info(ex);
+            }
+            
+            // Assert
+            Assert.Contains(messageInput, messages.First().Message);
+        }
+
+        [Fact]
+        [Trait("Category", "unit")]
         public void Log_Trace()
         {
             // Assemble
@@ -330,7 +423,6 @@ namespace EZLogger.Test
                 logger.Trace("test");
             }
             
-
             // Assert
             Assert.Equal(messages.First().Level, LogLevel.Trace);
         }
@@ -357,6 +449,31 @@ namespace EZLogger.Test
             Assert.Equal(messageInput, messages.First().Message);
         }
 
+
+        [Fact]
+        [Trait("Category", "unit")]
+        public void Log_Trace_Exception()
+        {
+            // Assemble
+            const string messageInput = "His name was Robert Paulson.";
+
+            var messages = new List<LogMessage>();
+            var writer = new Mock<IWriter>();
+            writer.Setup(w => w.WriteMessage(It.Is<LogMessage>(l => l.Level == LogLevel.Trace)))
+                  .Callback<LogMessage>(m => messages.Add(m));
+            
+            var ex = new Exception(messageInput);
+
+            // Act
+            using(var logger = new Logger(writer.Object))
+            {
+                logger.Trace(ex);
+            }
+            
+            // Assert
+            Assert.Contains(messageInput, messages.First().Message);
+        }
+
         [Fact]
         [Trait("Category", "unit")]
         public void Log_Warning()
@@ -373,7 +490,6 @@ namespace EZLogger.Test
                 logger.Warning("test");
             }
             
-
             // Assert
             Assert.Equal(LogLevel.Warning, messages.First().Level);
         }
@@ -398,6 +514,31 @@ namespace EZLogger.Test
             
             // Assert
             Assert.Equal(messageInput, messages.First().Message);
+        }
+
+
+        [Fact]
+        [Trait("Category", "unit")]
+        public void Log_Warning_Exception()
+        {
+            // Assemble
+            const string messageInput = "His name was Robert Paulson.";
+
+            var messages = new List<LogMessage>();
+            var writer = new Mock<IWriter>();
+            writer.Setup(w => w.WriteMessage(It.Is<LogMessage>(l => l.Level == LogLevel.Warning)))
+                  .Callback<LogMessage>(m => messages.Add(m));
+            
+            var ex = new Exception(messageInput);
+
+            // Act
+            using(var logger = new Logger(writer.Object))
+            {
+                logger.Warning(ex);
+            }
+            
+            // Assert
+            Assert.Contains(messageInput, messages.First().Message);
         }
     }
 }
