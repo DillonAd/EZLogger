@@ -14,7 +14,7 @@ namespace EZLogger.File
             {
                 sb.Append(message.Date.ToLongDateString()).Append(" ")
                   .Append(message.Date.ToLongTimeString()).Append(" - ")
-                  .Append(Enum.GetName(typeof(LogLevel), message.Level)).Append(" - ");
+                  .Append(LogLevels[message.Level]).Append(" - ");
 
                 if(!string.IsNullOrWhiteSpace(message.Message))
                 {
