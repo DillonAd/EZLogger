@@ -8,7 +8,7 @@ using Xunit;
 
 namespace EZLogger.Test
 {
-    public class FileMessageFormatTests
+    public class DefaultFileMessageFormatTests
     {
         [Theory]
         [InlineData(LogLevel.Debug)]
