@@ -6,6 +6,21 @@ namespace EZLogger
 {
     public abstract class Formatter<T> : IFormatter<T>
     {
+        protected readonly Dictionary<LogLevel, string> LogLevels;
+
+        public Formatter()
+        {
+            if(LogLevels == null)
+            {
+                LogLevels = new Dictionary<LogLevel, string>();
+
+                foreach(var level in Enum.GetValues(typeof(LogLevel)))
+                {
+                    LogLevels.Add((LogLevel)level, Enum.GetName(typeof(LogLevel), level));
+                }
+            }
+        }
+
         public abstract T FormatMessage(LogMessage message);
 
         // This method uses string.Format instead of $ interpolation
