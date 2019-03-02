@@ -24,7 +24,7 @@ namespace EZLogger
             _messages.Enqueue(new LogMessage(level, message));
 
         public void LogMessage(Exception ex, LogLevel level) =>
-            LogMessage(GetExceptionMessage(ex), level);
+            _messages.Enqueue(new LogMessage(level, ex));
 
         public void Critical(string message) =>
             LogMessage(message, LogLevel.Critical);
@@ -78,13 +78,6 @@ namespace EZLogger
                 _writer.Dispose();
             }
         }
-
-        // This method uses string.Format instead of $ interpolation
-        // to be backwards compatible with previous versions of C#.
-        // Once the dollar sign interpolation method is ubiquitous
-        // this can be changed to be more concise.
-        private string GetExceptionMessage(Exception ex) =>
-            ex == null ? string.Empty : string.Format("{0}{1}{2}{3}", ex.Message, ex.StackTrace, Environment.NewLine, GetExceptionMessage(ex.InnerException));
 
         private void PersistMessages()
         {
