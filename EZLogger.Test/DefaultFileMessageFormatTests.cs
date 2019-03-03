@@ -8,7 +8,7 @@ using Xunit;
 
 namespace EZLogger.Test
 {
-    public class FileMessageFormatTests
+    public class DefaultFileMessageFormatTests
     {
         [Theory]
         [InlineData(LogLevel.Debug)]
@@ -48,7 +48,7 @@ namespace EZLogger.Test
             Assert.Contains(message, result);
         }
 
-        [Theory(Skip = "Exceptions will be included after basic messages work")]
+        [Theory]
         [InlineData(LogLevel.Debug)]
         [InlineData(LogLevel.Error)]
         [InlineData(LogLevel.Info)]
@@ -70,7 +70,7 @@ namespace EZLogger.Test
             Assert.Contains(Enum.GetName(typeof(LogLevel), level), result);
         }
 
-        [Fact(Skip = "Exceptions will be included after basic messages work")]
+        [Fact]
         [Trait("Category", "unit")]
         public void FileMessageFormat_Exception_Message()
         {
@@ -88,7 +88,7 @@ namespace EZLogger.Test
             Assert.Contains(ex.Message, result);
         }
 
-        [Fact(Skip = "Exceptions will be included after basic messages work")]
+        [Fact]
         [Trait("Category", "unit")]
         public void FileMessageFormat_Exception_StackTrace()
         {

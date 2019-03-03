@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EZLogger.Console\EZLogger.Console.csproj" />
     <ProjectReference Include="..\EZLogger.File\EZLogger.File.csproj" />
     <ProjectReference Include="..\EZLogger\EZLogger.csproj" />
   </ItemGroup>
