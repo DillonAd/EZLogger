@@ -1,7 +1,10 @@
 final stash_name = "${JOB_NAME}-${BUILD_ID}".replace('/','_')
 
 node {
-    docker.image('microsoft/dotnet:sdk-2.0').inside {
+    docker.image('dillonad/dotnet-sonar:2.1').inside {
+        stage("Setup") {
+            sh 'dotnet-sonarscanner begin /k:"EZLogger" /d:sonar.host.url="https://sonarcloud.io"'
+        }
         stage("Build") {
             deleteDir()
             checkout scm
@@ -15,6 +18,9 @@ node {
             unstash "${stash_name}-Build"
             sh 'dotnet test ./EZLogger.Test/EZLogger.Test.csproj'
             stash "${stash_name}-Test"
+        }
+        stage('Analyze') {
+            sh 'dotnet-sonarscanner end'
         }
         stage('Deploy') {
             if ("${BRANCH_NAME}" == 'master') {
