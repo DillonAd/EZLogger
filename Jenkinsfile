@@ -1,16 +1,17 @@
 final stash_name = "${JOB_NAME}-${BUILD_ID}".replace('/','_')
 
 node {
+    stage ("SCM") {
+        checkout(scm, clearWorkspace: true)
+    }
     docker.image('dillonad/dotnet-sonar:2.1').inside {
         stage("Setup") {
-            sh 'dotnet-sonarscanner begin /k:"EZLogger" /d:sonar.host.url="https://sonarcloud.io"'
+            withCredentials([string(credentialsId: 'SonarCloud_EZLogger', variable: 'SONAR_API_KEY')]) {
+                sh 'dotnet-sonarscanner begin /k:"EZLogger" /o:dillonad-github /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${SONAR_API_KEY}"'
+            }
         }
         stage("Build") {
-            deleteDir()
-            checkout scm
-
-            sh 'dotnet restore'
-            sh 'dotnet build --configuration Release'
+            sh 'dotnet build --configuration Release -v diag $WORKSPACE/EZLogger.sln'
             
             stash "${stash_name}-Build"
         }
@@ -20,7 +21,9 @@ node {
             stash "${stash_name}-Test"
         }
         stage('Analyze') {
-            sh 'dotnet-sonarscanner end'
+            withCredentials([string(credentialsId: 'SonarCloud_EZLogger', variable: 'SONAR_API_KEY')]) {
+                sh 'dotnet-sonarscanner end /d:sonar.login="${SONAR_API_KEY}"'
+            }
         }
         stage('Deploy') {
             if ("${BRANCH_NAME}" == 'master') {
