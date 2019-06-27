@@ -2,7 +2,8 @@ final stash_name = "${JOB_NAME}-${BUILD_ID}".replace('/','_')
 
 node {
     stage ("SCM") {
-        checkout(scm, clearWorkspace: true)
+        deleteDir()
+        checkout scm
     }
     docker.image('dillonad/dotnet-sonar:2.1').inside {
         stage("Setup") {
