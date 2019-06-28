@@ -1,0 +1,56 @@
+name: $(Build.BuildId)
+
+pool: Default
+
+trigger:
+ - master
+pr: none
+
+variables:
+  buildConfiguration: 'Release'
+  Parameters.Solution: '$(Build.SourcesDirectory)/EZLogger.sln'
+
+steps:
+- task: DotNetCoreInstaller@0
+  inputs:
+    version: 2.1.700
+    
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: '$(Parameters.Solution)'
+
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'Evolution'
+    organization: 'dillonad-github'
+    scannerMode: 'MSBuild'
+    projectKey: 'EZLogger'
+    projectName: 'EZLogger'
+    extraProperties: 'sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/opencover.xml'
+    
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    projects: '$(Parameters.Solution)'
+    arguments: '--configuration $(BuildConfiguration) --no-restore'
+
+- task: DotNetCoreCLI@2
+  displayName: Test
+  inputs:
+    command: test
+    projects: '$(Parameters.Solution)'
+    arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Build.SourcesDirectory)/opencover.xml /p:Exclude="[xunit.*]*"'
+
+- task: SonarCloudAnalyze@1
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: source'
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)'
+    ArtifactName: source
