@@ -12,7 +12,7 @@ node {
             }
         }
         stage("Build") {
-            sh 'dotnet build --configuration Release -v diag $WORKSPACE/EZLogger.sln'
+            sh 'dotnet build --configuration Release $WORKSPACE/EZLogger.sln'
             
             stash "${stash_name}-Build"
         }
