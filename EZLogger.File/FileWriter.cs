@@ -36,15 +36,12 @@ namespace EZLogger.File
             GC.SuppressFinalize(this);
         }
 
-        protected void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
-            if(disposing)
+            if(disposing && _writer != null && _writer.BaseStream != null)
             {
-                if(_writer != null && _writer.BaseStream != null)
-                {
-                    _writer.Flush();
-                    _writer.Dispose();
-                }
+                _writer.Flush();
+                _writer.Dispose();
             }
         }
     }
