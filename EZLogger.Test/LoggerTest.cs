@@ -117,6 +117,144 @@ namespace EZLogger.Test
 
         [Fact]
         [Trait("Category", "unit")]
+        public void LogException_Debug()
+        {
+            // Assemble
+            List<LogMessage> writtenMessages = new List<LogMessage>();
+
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<LogMessage>()))
+                   .Callback((LogMessage message) => writtenMessages.Add(message));
+
+            var ex = new Exception("test message");
+            
+            // Act
+            using(ILogger logger = new Logger(mockObj.Object))
+            {
+                logger.Debug(ex);
+            }
+
+            // Assert
+            Assert.Equal(LogLevel.Debug, writtenMessages[0].Level);
+        }
+
+        [Fact]
+        [Trait("Category", "unit")]
+        public void LogException_Critical()
+        {
+            // Assemble
+            List<LogMessage> writtenMessages = new List<LogMessage>();
+
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<LogMessage>()))
+                   .Callback((LogMessage message) => writtenMessages.Add(message));
+
+            var ex = new Exception("test message");
+            
+            // Act
+            using(ILogger logger = new Logger(mockObj.Object))
+            {
+                logger.Critical(ex);
+            }
+
+            // Assert
+            Assert.Equal(LogLevel.Critical, writtenMessages[0].Level);
+        }
+
+        [Fact]
+        [Trait("Category", "unit")]
+        public void LogException_Error()
+        {
+            // Assemble
+            List<LogMessage> writtenMessages = new List<LogMessage>();
+
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<LogMessage>()))
+                   .Callback((LogMessage message) => writtenMessages.Add(message));
+
+            var ex = new Exception("test message");
+            
+            // Act
+            using(ILogger logger = new Logger(mockObj.Object))
+            {
+                logger.Error(ex);
+            }
+
+            // Assert
+            Assert.Equal(LogLevel.Error, writtenMessages[0].Level);
+        }
+
+        [Fact]
+        [Trait("Category", "unit")]
+        public void LogException_Info()
+        {
+            // Assemble
+            List<LogMessage> writtenMessages = new List<LogMessage>();
+
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<LogMessage>()))
+                   .Callback((LogMessage message) => writtenMessages.Add(message));
+
+            var ex = new Exception("test message");
+            
+            // Act
+            using(ILogger logger = new Logger(mockObj.Object))
+            {
+                logger.Info(ex);
+            }
+
+            // Assert
+            Assert.Equal(LogLevel.Info, writtenMessages[0].Level);
+        }
+
+        [Fact]
+        [Trait("Category", "unit")]
+        public void LogException_Warning()
+        {
+            // Assemble
+            List<LogMessage> writtenMessages = new List<LogMessage>();
+
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<LogMessage>()))
+                   .Callback((LogMessage message) => writtenMessages.Add(message));
+
+            var ex = new Exception("test message");
+            
+            // Act
+            using(ILogger logger = new Logger(mockObj.Object))
+            {
+                logger.Warning(ex);
+            }
+
+            // Assert
+            Assert.Equal(LogLevel.Warning, writtenMessages[0].Level);
+        }
+
+        [Fact]
+        [Trait("Category", "unit")]
+        public void LogException_Trace()
+        {
+            // Assemble
+            List<LogMessage> writtenMessages = new List<LogMessage>();
+
+            var mockObj = new Mock<IWriter>();
+            mockObj.Setup(x => x.WriteMessage(It.IsAny<LogMessage>()))
+                   .Callback((LogMessage message) => writtenMessages.Add(message));
+
+            var ex = new Exception("test message");
+            
+            // Act
+            using(ILogger logger = new Logger(mockObj.Object))
+            {
+                logger.Trace(ex);
+            }
+
+            // Assert
+            Assert.Equal(LogLevel.Trace, writtenMessages[0].Level);
+        }
+
+        [Fact]
+        [Trait("Category", "unit")]
         public void Log_All_Messages()
         {
             // Assemble
