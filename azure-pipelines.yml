@@ -1,6 +1,7 @@
 name: $(Build.BuildId)
 
-pool: Default
+pool:
+  vmImage: ubuntu-18.04
 
 trigger:
  - master
