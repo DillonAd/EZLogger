@@ -1,5 +1,3 @@
-using System;
-
 namespace EZLogger
 {
     public enum LogLevel
