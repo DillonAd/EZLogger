@@ -37,4 +37,12 @@ The supported `IWriter` implementations are:
  - Console
  - File
 
+## Contributing
+
+If you have an idea to improve this project, open an issue or submit a PR!
+
+### Testing
+
+To test the project, use the typical .NET Core commands. To continually test with a coverage report, run the `test.sh` or `test.bat` file. The coverage report will be printed to the console and a coverage report file will be written to the test project directory under the name of `lcov.info`.
+
 Happy Logging!
